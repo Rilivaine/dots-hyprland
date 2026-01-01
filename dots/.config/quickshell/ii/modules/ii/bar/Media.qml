@@ -26,6 +26,17 @@ Item {
         onTriggered: activePlayer.positionChanged()
     }
 
+    // Scroll to switch workspaces
+    WheelHandler {
+        onWheel: event => {
+            if (event.angleDelta.y < 0)
+                MprisController.setVolume(activePlayer.volume - 0.02);
+            else if (event.angleDelta.y > 0)
+                MprisController.setVolume(activePlayer.volume + 0.02);
+        }
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+    }
+
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton | Qt.BackButton | Qt.ForwardButton | Qt.RightButton | Qt.LeftButton
@@ -37,7 +48,7 @@ Item {
             } else if (event.button === Qt.ForwardButton || event.button === Qt.RightButton) {
                 activePlayer.next();
             } else if (event.button === Qt.LeftButton) {
-                GlobalStates.mediaControlsOpen = !GlobalStates.mediaControlsOpen
+                GlobalStates.mediaControlsOpen = !GlobalStates.mediaControlsOpen;
             }
         }
     }
@@ -61,7 +72,7 @@ Item {
                 anchors.centerIn: parent
                 width: mediaCircProg.implicitSize
                 height: mediaCircProg.implicitSize
-                
+
                 MaterialSymbol {
                     anchors.centerIn: parent
                     fill: 1
@@ -81,9 +92,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight // Truncates the text on the right
             color: Appearance.colors.colOnLayer1
-            text: `${cleanedTitle}${activePlayer?.trackArtist ? ' • ' + activePlayer.trackArtist : ''}`
+            text: activePlayer?.trackArtist ? `${activePlayer.trackArtist} • ${cleanedTitle}` : cleanedTitle
         }
-
     }
-
 }
