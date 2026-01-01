@@ -31,9 +31,8 @@ Item {
             font.pixelSize: Appearance.font.pixelSize.smaller
             color: Appearance.colors.colSubtext
             elide: Text.ElideRight
-            text: root.focusingThisMonitor && root.activeWindow?.activated && root.biggestWindow ? 
-                root.activeWindow?.appId :
-                (root.biggestWindow?.class) ?? Translation.tr("Desktop")
+            text: root.activeWindow?.activated ? 
+                root.activeWindow?.appId : Translation.tr("Desktop")
 
         }
 
@@ -42,9 +41,8 @@ Item {
             font.pixelSize: Appearance.font.pixelSize.small
             color: Appearance.colors.colOnLayer0
             elide: Text.ElideRight
-            text: root.focusingThisMonitor && root.activeWindow?.activated && root.biggestWindow ? 
-                root.activeWindow?.title :
-                (root.biggestWindow?.title) ?? `${Translation.tr("Workspace")} ${monitor?.activeWorkspace?.id ?? 1}`
+            text: root.activeWindow?.activated ? 
+                root.activeWindow?.title : `${Translation.tr("Workspace")} ${HyprlandData.activeWorkspace?.id ?? 1}`
         }
 
     }
