@@ -18,7 +18,7 @@ Singleton {
 	id: root;
 	property list<MprisPlayer> players: Mpris.players.values.filter(player => isRealPlayer(player));
 	property MprisPlayer trackedPlayer: null;
-	property MprisPlayer activePlayer: trackedPlayer ?? Mpris.players.values[0] ?? null;
+	property MprisPlayer activePlayer: trackedPlayer ?? Mpris.players.values.filter(player => isRealPlayer(player))[0] ?? null;
 	signal trackChanged(reverse: bool);
   signal volumeChanged();
 
@@ -39,12 +39,14 @@ Singleton {
             // playerctld just copies other buses and we don't need duplicates
             !player.dbusName?.startsWith('org.mpris.MediaPlayer2.playerctld') &&
             // Non-instance mpd bus
-            !(player.dbusName?.endsWith('.mpd') && !player.dbusName.endsWith('MediaPlayer2.mpd')));
+            !(player.dbusName?.endsWith('.mpd') && !player.dbusName.endsWith('MediaPlayer2.mpd')) &&
+            player.dbusName.includes('spotify')
+            );
     }
 
 	// Original stuff from fox below
 	Instantiator {
-		model: Mpris.players;
+		model: Mpris.players.values.filter(player => isRealPlayer(player));
 
 		Connections {
 			required property MprisPlayer modelData;
@@ -58,15 +60,16 @@ Singleton {
 
 			Component.onDestruction: {
 				if (root.trackedPlayer == null || !root.trackedPlayer.isPlaying) {
-					for (const player of Mpris.players.values) {
+          const players = Mpris.players.values.filter(player => isRealPlayer(player));
+					for (const player of players) {
 						if (player.playbackState.isPlaying) {
 							root.trackedPlayer = player;
 							break;
 						}
 					}
 
-					if (root.trackedPlayer == null && Mpris.players.values.length != 0) {
-						root.trackedPlayer = Mpris.players.values[0];
+					if (root.trackedPlayer == null && players.length != 0) {
+						root.trackedPlayer = players[0];
 					}
 				}
 			}
@@ -141,7 +144,9 @@ Singleton {
   function setVolume(volume: var) {
     if (this.canChangeVolume) {
       this.activePlayer.volume = Math.min(Math.max(volume, 0), 1);
-      this.volumeChanged();
+      if (this.activePlayer.volume > 0 && this.activePlayer.volume < 1) {
+        this.volumeChanged();
+      }
     }
   }
 
@@ -162,11 +167,12 @@ Singleton {
 	}
 
 	function setActivePlayer(player: MprisPlayer) {
-		const targetPlayer = player ?? Mpris.players[0];
+		const targetPlayer = player ?? Mpris.players.values.filter(player => isRealPlayer(player))[0];
 		console.log(`[Mpris] Active player ${targetPlayer} << ${activePlayer}`)
 
 		if (targetPlayer && this.activePlayer) {
-			this.__reverse = Mpris.players.indexOf(targetPlayer) < Mpris.players.indexOf(this.activePlayer);
+      const players = Mpris.players.values.filter(player => isRealPlayer(player));
+			this.__reverse = players.indexOf(targetPlayer) < players.indexOf(this.activePlayer);
 		} else {
 			// always animate forward if going to null
 			this.__reverse = false;
