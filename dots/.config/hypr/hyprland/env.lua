@@ -14,3 +14,12 @@ hl.env("XDG_MENU_PREFIX", "plasma-")
 
 -- Virtual environment
 hl.env("ILLOGICAL_IMPULSE_VIRTUAL_ENV", home_dir .. "/.local/state/quickshell/.venv")
+
+-- Terminal application
+hl.env("TERMINAL", "kitty -1")
+
+hl.env("LIBVA_DRIVER_NAME", "nvidia")
+hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+hl.env("__GL_VRR_ALLOWED", "1")
+hl.env("WLR_DRM_NO_ATOMIC", "1")
+hl.env("WLR_NO_HARDWARE_CURSORS", "1")

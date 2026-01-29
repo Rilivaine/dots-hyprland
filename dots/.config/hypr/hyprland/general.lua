@@ -254,13 +254,15 @@ hl.animation({
 
 hl.config({
     input = {
-        kb_layout = "us",
+        kb_layout = "us, ua",
+        kb_options= "compose:ralt",
         numlock_by_default = true,
         repeat_delay = 250,
         repeat_rate = 35,
 
-        follow_mouse = 1,
+        follow_mouse = 2,
         off_window_axis_events = 2,
+        sensitivity = -0.8,
 
         touchpad = {
             natural_scroll = true,
@@ -273,7 +275,7 @@ hl.config({
     misc = {
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
-        vrr = 0,
+        vrr = 1,
         mouse_move_enables_dpms = true,
         key_press_enables_dpms = true,
         animate_manual_resizes = false,
@@ -302,4 +304,9 @@ hl.config({
     xwayland = {
         force_zero_scaling = true
     }
+})
+
+hl.device({
+  name = "elan06fa:00-04f3:31ad-touchpad",
+  sensitivity = 0
 })
