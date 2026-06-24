@@ -88,6 +88,10 @@ quickshell, home_attrs, ... }:
       bibata-cursors
 
 
+      ### illogical-impulse-breezex-bin
+      breezex-cursor
+
+
       ### illogical-impulse-fonts-themes
       adw-gtk3 #adw-gtk-theme-git
       kdePackages.breeze kdePackages.breeze-icons #breeze

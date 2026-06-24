@@ -1,0 +1,20 @@
+groups=(illogical-impulse)
+pkgname=illogical-impulse-breezex-bin
+pkgver=2.0.1
+pkgrel=3
+pkgdesc="Extended KDE BreezeX cursor theme, installed for illogical-impulse dotfiles"
+arch=('any')
+url="https://github.com/ful1e5/BreezeX_Cursor"
+license=('GPL-3.0-or-later')
+conflicts=("breezex-cursor-theme")
+install=illogical-impulse-breezex-bin.install
+options=('!strip')
+_variant=BreezeX
+source=("${pkgname%-bin}-$pkgver.tar.xz::$url/releases/download/v$pkgver/$_variant.tar.xz")
+sha256sums=('SKIP')
+
+package() {
+  install -dm755 "$pkgdir/usr/share/icons"
+  cp -dr --no-preserve=mode BreezeX-{Dark,Light,Black} "$pkgdir/usr/share/icons/"
+  ln -s BreezeX-Dark "$pkgdir/usr/share/icons/BreezeX"
+}

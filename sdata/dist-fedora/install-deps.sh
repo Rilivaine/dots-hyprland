@@ -96,6 +96,9 @@ done < <(echo "$deps_data" | yq '.groups | keys[]? | select(length > 0)')
 # Add back versionlock at the end
 [ -n $nolock_qs ] || v sudo dnf versionlock add quickshell-git || true
 
+# showfun install-breezex
+# v install-breezex
+
 echo -e "\n========================================"
 echo "All installations are completed."
 echo "========================================"

@@ -46,12 +46,6 @@ packages = [
   "yq"
 ]
 
-# Cursor themes
-[groups.cursor_themes]
-packages = [
-  "bibata-cursor-theme"
-]
-
 # Fonts & Themes
 [groups.fonts_and_themes]
 packages = [

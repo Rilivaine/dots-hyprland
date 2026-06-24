@@ -228,6 +228,10 @@ Extra dependencies.
 ## illogical-impulse-bibata-modern-classic-bin
 - [source](https://github.com/ful1e5/Bibata_Cursor)
 - Used in Hyprland config, not necessary.
+- 
+## illogical-impulse-breezex-bin
+- [source](https://github.com/ful1e5/BreezeX_Cursor)
+- Used in Hyprland config, not necessary.
 
 ## illogical-impulse-microtex-git
 - [source](https://github.com/NanoMichael/MicroTeX)

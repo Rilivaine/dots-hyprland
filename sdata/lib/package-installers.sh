@@ -46,6 +46,21 @@ install-bibata(){
   x cd $REPO_ROOT
 }
 
+install-breezex(){
+  x mkdir -p $REPO_ROOT/cache/breezex-cursor
+  x cd $REPO_ROOT/cache/breezex-cursor
+  name="BreezeX"
+  file="$name.tar.xz"
+  version="2.0.1"
+  try rm -f $file
+  x curl -JLO https://github.com/ful1e5/BreezeX_Cursor/releases/download/v${version}/$file
+  tar -xf $file
+  x sudo mkdir -p /usr/local/share/icons
+  x sudo cp -r BreezeX-{Dark,Light,Black} /usr/local/share/icons/
+  x sudo ln -sfn BreezeX-Dark /usr/local/share/icons/BreezeX
+  x cd $REPO_ROOT
+}
+
 install-MicroTeX(){
   x mkdir -p $REPO_ROOT/cache/MicroTeX
   x cd $REPO_ROOT/cache/MicroTeX

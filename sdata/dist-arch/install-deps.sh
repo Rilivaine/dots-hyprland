@@ -79,6 +79,14 @@ install-local-pkgbuild() {
 
   source ./PKGBUILD
   x yay -S --sudoloop $installflags --asdeps "${depends[@]}"
+  # if [[ "$pkgname" == illogical-impulse-breezex-bin ]]; then
+  #   # Orphaned BreezeX files block pacman before pre_install hooks run.
+  #   try sudo rm -rf \
+  #     /usr/share/icons/BreezeX \
+  #     /usr/share/icons/BreezeX-Dark \
+  #     /usr/share/icons/BreezeX-Light \
+  #     /usr/share/icons/BreezeX-Black
+  # fi
   # man makepkg:
   # -A, --ignorearch: Ignore a missing or incomplete arch field in the build script.
   # -s, --syncdeps: Install missing dependencies using pacman. When build-time or run-time dependencies are not found, pacman will try to resolve them.
@@ -95,6 +103,7 @@ metapkgs+=(./sdata/dist-arch/illogical-impulse-hyprland)
 metapkgs+=(./sdata/dist-arch/illogical-impulse-microtex-git)
 metapkgs+=(./sdata/dist-arch/illogical-impulse-quickshell-git)
 metapkgs+=(./sdata/dist-arch/illogical-impulse-bibata-modern-classic-bin)
+metapkgs+=(./sdata/dist-arch/illogical-impulse-breezex-bin)
 
 for i in "${metapkgs[@]}"; do
   metainstallflags="--needed"
