@@ -1,0 +1,14 @@
+format="""
+$directory\
+$all
+"""
+
+right_format = '[$duration](bold yellow)'
+
+[cmd_duration]
+min_time = 1
+show_milliseconds = true
+format = "[$duration]($style)"
+
+[directory]
+read_only = " 󰌾"
