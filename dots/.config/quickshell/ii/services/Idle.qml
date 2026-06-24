@@ -2,10 +2,12 @@ pragma Singleton
 import qs.modules.common
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 
 /**
- * A nice wrapper for date and time strings.
+ * Idle inhibition ("Keep system awake").
+ * Uses a Wayland idle inhibitor plus a logind inhibitor as a fallback for hypridle.
  */
 Singleton {
     id: root
@@ -13,14 +15,35 @@ Singleton {
     property alias inhibit: idleInhibitor.enabled
     inhibit: false
 
+    function applyPersistedInhibit() {
+        if (!Persistent.ready)
+            return;
+
+        if (Persistent.isNewHyprlandInstance) {
+            root.inhibit = false;
+            Persistent.states.idle.inhibit = false;
+            return;
+        }
+
+        root.inhibit = Persistent.states.idle.inhibit;
+    }
+
+    Component.onCompleted: applyPersistedInhibit()
+
     Connections {
         target: Persistent
         function onReadyChanged() {
-            if (!Persistent.isNewHyprlandInstance) {
+            root.applyPersistedInhibit();
+        }
+    }
+
+    Connections {
+        target: Persistent.states.idle
+        function onInhibitChanged() {
+            if (!Persistent.ready || Persistent.isNewHyprlandInstance)
+                return;
+            if (root.inhibit !== Persistent.states.idle.inhibit)
                 root.inhibit = Persistent.states.idle.inhibit;
-            } else {
-                Persistent.states.idle.inhibit = root.inhibit;
-            }
         }
     }
 
@@ -33,20 +56,28 @@ Singleton {
         Persistent.states.idle.inhibit = root.inhibit;
     }
 
+    // hypridle also respects logind idle inhibitors; keep this as a fallback when
+    // the Wayland surface is not considered visible enough to honor zwp_idle_inhibit.
+    Process {
+        running: root.inhibit
+        command: ["systemd-inhibit", "--what=idle:sleep", "--who=quickshell", "--why=Keep system awake", "--mode=block", "sleep", "infinity"]
+    }
+
     IdleInhibitor {
         id: idleInhibitor
         window: PanelWindow {
-            // Inhibitor requires a "visible" surface
-            // Actually not lol
-            implicitWidth: 0
-            implicitHeight: 0
+            visible: true
+            implicitWidth: 1
+            implicitHeight: 1
             color: "transparent"
-            // Just in case...
+            exclusionMode: ExclusionMode.Ignore
+            exclusiveZone: 0
+            WlrLayershell.namespace: "quickshell:idleInhibitor"
+            WlrLayershell.layer: WlrLayer.Overlay
             anchors {
                 right: true
                 bottom: true
             }
-            // Make it not interactable
             mask: Region {
                 item: null
             }
