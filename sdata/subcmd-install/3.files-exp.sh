@@ -12,7 +12,6 @@
 # TODO: When --via-nix is specified, use dots-extra/vianix/hypridle.conf instead
 #
 # Stage 2 todos:
-# TODO: Implement bool key symlink (both read-write and read-only), when the value of `symlink` is true, then instead using `rsync` or `cp`, use `ln`.
 # TODO: add --exp-file-reset-symlink  Try to remove all symlink in .config and .local, which point to the local repo
 # TODO: Update help and doc about `--exp-files` and the yaml config, including the possible values of mode.
 #
@@ -148,6 +147,177 @@ get_next_backup_number() {
   echo $counter
 }
 
+resolve_repo_path() {
+  local path="$1"
+  if [[ "$path" == /* ]]; then
+    echo "$path"
+  else
+    echo "${REPO_ROOT}/${path}"
+  fi
+}
+
+symlink_points_to() {
+  local link="$1"
+  local target="$2"
+  [[ -L "$link" ]] && [[ "$(readlink -f "$link")" == "$(readlink -f "$target")" ]]
+}
+
+record_installed_path() {
+  local path="$1"
+  x mkdir -p "$(dirname "${INSTALLED_LISTFILE}")"
+  printf '%s\n' "$path" >> "${INSTALLED_LISTFILE}"
+}
+
+remove_destination() {
+  local to="$1"
+  if [[ -L "$to" ]]; then
+    v rm -- "$to"
+  elif [[ -d "$to" ]]; then
+    v rm -rf -- "$to"
+  elif [[ -f "$to" ]]; then
+    v rm -- "$to"
+  fi
+}
+
+get_install_method() {
+  if [[ "${INSTALL_COPY:-false}" == true ]]; then
+    echo "copy"
+  elif [[ "${INSTALL_SYMLINK:-false}" == true ]]; then
+    echo "symlink"
+  else
+    yq -r '.user_preferences.install_method // "copy"' "$CONFIG_FILE"
+  fi
+}
+
+should_symlink_pattern() {
+  local pattern="$1"
+  local override
+  override=$(echo "$pattern" | yq -r '.symlink // "inherit"')
+  case "$override" in
+    true) return 0 ;;
+    false) return 1 ;;
+    inherit|"") [[ "$(get_install_method)" == "symlink" ]] ;;
+    *) return 1 ;;
+  esac
+}
+
+pattern_has_excludes() {
+  local pattern="$1"
+  echo "$pattern" | yq -e '.excludes | length > 0' >/dev/null 2>&1
+}
+
+resolve_install_target() {
+  local to="$1"
+  local parent name resolved_parent
+  if [[ -e "$to" || -L "$to" ]]; then
+    readlink -f "$to"
+    return
+  fi
+  parent="$(dirname "$to")"
+  name="$(basename "$to")"
+  if [[ -e "$parent" || -L "$parent" ]]; then
+    resolved_parent="$(readlink -f "$parent")"
+    echo "${resolved_parent}/${name}"
+  else
+    readlink -f "$to" 2>/dev/null || echo "$to"
+  fi
+}
+
+paths_resolve_same() {
+  local from="$1"
+  local to="$2"
+  local abs_from abs_to
+  abs_from="$(readlink -f "$(resolve_repo_path "$from")")"
+  abs_to="$(resolve_install_target "$to")"
+  [[ -n "$abs_from" && -n "$abs_to" && "$abs_from" == "$abs_to" ]]
+}
+
+install_pattern_symlink() {
+  local from="$1"
+  local to="$2"
+  local mode="$3"
+  local abs_from
+  abs_from="$(resolve_repo_path "$from")"
+
+  if paths_resolve_same "$from" "$to"; then
+    echo "Skipping symlink: $to already resolves to repo source"
+    record_installed_path "$to"
+    return
+  fi
+
+  case "$mode" in
+    "skip")
+      echo "Skipping $from"
+      return
+      ;;
+    "skip-if-exists")
+      if [[ -e "$to" || -L "$to" ]]; then
+        if symlink_points_to "$to" "$abs_from"; then
+          echo "Already symlinked correctly"
+          record_installed_path "$to"
+        else
+          echo "Skipping $from (destination exists)"
+        fi
+        return
+      fi
+      ;;
+    "soft")
+      if [[ -e "$to" || -L "$to" ]]; then
+        if symlink_points_to "$to" "$abs_from"; then
+          echo "Already symlinked correctly"
+          record_installed_path "$to"
+        else
+          echo "Skipping $from (destination exists, soft mode)"
+        fi
+        return
+      fi
+      ;;
+    "soft-backup")
+      if [[ -e "$to" || -L "$to" ]]; then
+        if symlink_points_to "$to" "$abs_from"; then
+          echo "Already symlinked correctly"
+          record_installed_path "$to"
+          return
+        fi
+        v ln -sfn "$abs_from" "$to.new"
+        record_installed_path "$to.new"
+        return
+      fi
+      ;;
+    "hard-backup")
+      if [[ -e "$to" || -L "$to" ]]; then
+        if symlink_points_to "$to" "$abs_from"; then
+          echo "Already symlinked correctly"
+          record_installed_path "$to"
+          return
+        fi
+        local backup_number
+        backup_number=$(get_next_backup_number "$to")
+        v mv "$to" "$to.old.$backup_number"
+      fi
+      ;;
+    "sync"|"hard")
+      if [[ -e "$to" || -L "$to" ]]; then
+        if symlink_points_to "$to" "$abs_from"; then
+          echo "Already symlinked correctly"
+          record_installed_path "$to"
+          return
+        fi
+        warning_overwrite
+        remove_destination "$to"
+      fi
+      ;;
+    *)
+      echo "Unknown mode for symlink: $mode"
+      return
+      ;;
+  esac
+
+  v mkdir -p "$(dirname "$to")"
+  v ln -sfn "$abs_from" "$to"
+  record_installed_path "$to"
+}
+
 # =============================================================================
 # MAIN EXECUTION
 # =============================================================================
@@ -205,6 +375,22 @@ for pattern in "${patterns[@]}"; do
   # Check if source exists
   if [[ ! -e "$from" ]]; then
     echo "Warning: Source does not exist: $from (skipping)"
+    continue
+  fi
+
+  if should_symlink_pattern "$pattern"; then
+    if pattern_has_excludes "$pattern"; then
+      echo "Warning: excludes are ignored for symlinks; copying $from instead"
+    else
+      echo "Symlinking into repo: $(resolve_repo_path "$from")"
+      install_pattern_symlink "$from" "$to" "$mode"
+      continue
+    fi
+  fi
+
+  if paths_resolve_same "$from" "$to"; then
+    echo "Skipping copy: $to already resolves to repo source (would corrupt symlinks)"
+    record_installed_path "$to"
     continue
   fi
 

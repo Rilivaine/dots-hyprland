@@ -1,6 +1,6 @@
 # This script is meant to be sourced.
 # It's not for directly running.
-printf "${STY_CYAN}[$0]: 3. Copying config files\n${STY_RST}"
+printf "${STY_CYAN}[$0]: 3. Installing config files\n${STY_RST}"
 
 # shellcheck shell=bash
 

@@ -6,11 +6,18 @@
 # - `hard-backup`: If target file exists, create backup by renaming it to `*.old.<n>` where `<n>` is a number increment from 1 to prevent backup gets overwritten when running twice. (Keep in mind that this script must be idempotent.) Also must compare the actual file content by using MD5 HASH value to prevent generating lots of `*.old.<n>`s when runnng multiple times. Do not create backup but skip coyping when source and target HASH values are exactly the same.
 # - `skip`: Skip this step
 # - `skip-if-exists`: Skip this step if target exists
+#
+# Optional per-pattern key:
+# - `symlink`: true | false | inherit (default inherit)
+#   When true (or when --symlink / user_preferences.install_method=symlink),
+#   the destination is a symlink into this repo instead of a copied file/tree.
+#   Excludes are not supported with symlinks; those patterns fall back to copy.
 version: "1.0"
 user_preferences:
-  shell: "fish" # fish | zsh
-  terminal: "foot" # kitty | foot
+  shell: "zsh" # fish | zsh
+  terminal: "kitty" # kitty | foot
   keybindings: "default" # default | vim
+  install_method: "copy" # copy | symlink
 patterns:
   # Always install these files
   - from: "dots/.config/quickshell/ii"
@@ -24,9 +31,16 @@ patterns:
     condition:
       type: "shell"
       value: "fish"
-  - from: "dots/.config/zshrc.d"
-    to: "$XDG_CONFIG_HOME/zshrc.d"
+  - from: "dots/.zshenv"
+    to: "$HOME/.zshenv"
+    mode: "soft"
+    condition:
+      type: "shell"
+      value: "zsh"
+  - from: "dots/.config/zsh"
+    to: "$XDG_CONFIG_HOME/zsh"
     mode: "sync"
+    excludes: [".zcompdump", ".zcompdump*"]
     condition:
       type: "shell"
       value: "zsh"
@@ -66,6 +80,22 @@ patterns:
   # Fontconfig (default - fontsets handled separately if FONTSET_DIR_NAME is set)
   - from: "dots/.config/fontconfig"
     to: "$XDG_CONFIG_HOME/fontconfig"
+    mode: "sync"
+  # Personal configs (from my-dots)
+  - from: "dots/.config/scripts"
+    to: "$HOME/.dotscripts"
+    mode: "sync"
+  - from: "dots/.config/btop"
+    to: "$XDG_CONFIG_HOME/btop"
+    mode: "sync"
+  - from: "dots/.config/fastfetch"
+    to: "$XDG_CONFIG_HOME/fastfetch"
+    mode: "sync"
+  - from: "dots/.config/nvim"
+    to: "$XDG_CONFIG_HOME/nvim"
+    mode: "sync"
+  - from: "dots/.config/paru"
+    to: "$XDG_CONFIG_HOME/paru"
     mode: "sync"
   # MISC config directories (other .config directories)
   - from: "dots/.config/fuzzel"
@@ -108,13 +138,13 @@ patterns:
   - from: "dots/.config/dolphinrc"
     to: "$XDG_CONFIG_HOME/dolphinrc"
     mode: "soft"
-  - from: "dots/.config/kdeglobals"
+  - from: "dots/.config/global_config/kdeglobals"
     to: "$XDG_CONFIG_HOME/kdeglobals"
     mode: "soft"
   - from: "dots/.config/konsolerc"
     to: "$XDG_CONFIG_HOME/konsolerc"
     mode: "soft"
-  - from: "dots/.config/starship.toml"
+  - from: "dots/.config/starship/starship.toml"
     to: "$XDG_CONFIG_HOME/starship.toml"
     mode: "soft"
   - from: "dots/.config/thorium-flags.conf"

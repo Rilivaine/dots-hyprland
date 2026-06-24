@@ -1,5 +1,9 @@
 # Handle args for subcmd: install
 # shellcheck shell=bash
+
+# my-dots uses the yaml-based file installer by default
+EXPERIMENTAL_FILES_SCRIPT="${EXPERIMENTAL_FILES_SCRIPT:-true}"
+
 showhelp(){
 printf "Syntax: $0 install [OPTIONS]...
 
@@ -34,6 +38,9 @@ New features (experimental):
                               This feature is ${STY_YELLOW}still on early stage${STY_CYAN},
                               feedback and contribution welcomed,
                               see https://github.com/end-4/dots-hyprland/issues/2137 for details.
+      --symlink               Symlink config into the repo instead of copying (live edits).
+                              Overrides user_preferences.install_method for this run.
+      --copy                  Copy config files even when install_method is symlink.
       --via-nix               Use Nix and Home-manager to install dependencies.
                               This feature is ${STY_RED}working in progress${STY_CYAN}. Contribution is welcomed,
                               see https://github.com/end-4/dots-hyprland/issues/1061 for details.
@@ -47,7 +54,7 @@ cleancache(){
 # `man getopt` to see more
 para=$(getopt \
   -o hfFk:cs \
-  -l help,force,firstrun,fontset:,clean,skip-allgreeting,skip-alldeps,skip-allsetups,skip-allfiles,ignore-outdate,skip-sysupdate,skip-plasmaintg,skip-backup,skip-quickshell,skip-fish,skip-hyprland,skip-hyprland-entry,skip-fontconfig,skip-miscconf,core,exp-files,via-nix \
+  -l help,force,firstrun,fontset:,clean,skip-allgreeting,skip-alldeps,skip-allsetups,skip-allfiles,ignore-outdate,skip-sysupdate,skip-plasmaintg,skip-backup,skip-quickshell,skip-fish,skip-hyprland,skip-hyprland-entry,skip-fontconfig,skip-miscconf,core,exp-files,symlink,copy,via-nix \
   -n "$0" -- "$@")
 [ $? != 0 ] && echo "$0: Error when getopt, please recheck parameters." && exit 1
 #####################################################################################
@@ -89,6 +96,8 @@ while true ; do
     --skip-miscconf) SKIP_MISCCONF=true;shift;;
     --core) SKIP_PLASMAINTG=true;SKIP_FISH=true;SKIP_FONTCONFIG=true;SKIP_MISCCONF=true;shift;;
     --exp-files) EXPERIMENTAL_FILES_SCRIPT=true;shift;;
+    --symlink) INSTALL_SYMLINK=true;shift;;
+    --copy) INSTALL_COPY=true;shift;;
     --via-nix) INSTALL_VIA_NIX=true;shift;;
     
     ## Ones with parameter
