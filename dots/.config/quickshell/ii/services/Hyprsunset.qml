@@ -45,6 +45,28 @@ Singleton {
         root.firstEvaluation = true;
         reEvaluate();
     }
+    onTemperatureActiveChanged: {
+        if (!Persistent.ready)
+            return;
+        Persistent.states.nightLight.enabled = root.temperatureActive;
+    }
+
+    Connections {
+        target: Persistent
+        function onReadyChanged() {
+            if (!Persistent.ready)
+                return;
+
+            if (!Persistent.isNewHyprlandInstance && !root.automatic) {
+                if (Persistent.states.nightLight.enabled)
+                    root.enableTemperature();
+                else
+                    root.disableTemperature();
+            } else {
+                Persistent.states.nightLight.enabled = root.temperatureActive;
+            }
+        }
+    }
 
     function inBetween(t, from, to) {
         if (from < to) {
