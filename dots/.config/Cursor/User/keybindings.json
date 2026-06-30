@@ -1,0 +1,75 @@
+// Place your key bindings in this file to override the defaults
+[
+  {
+    "key": "ctrl+alt+t",
+    "command": "workbench.action.tasks.runTask"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "-workbench.action.files.saveLocalFile",
+    "when": "remoteFileDialogVisible"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "-workbench.action.files.saveAs"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "workbench.action.files.saveFiles"
+  },
+  {
+    "key": "alt+t delete",
+    "command": "workbench.action.terminal.killAll"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus && terminalHasBeenCreated"
+  },
+  {
+    "key": "alt+space g",
+    "command": "git.openChange"
+  },
+  {
+    "key": "alt+space h",
+    "command": "git.openFile"
+  },
+  {
+    "key": "ctrl+y",
+    "command": "-editor.action.inlineDiffs.acceptPartialEdit",
+    "when": "editorTextFocus && inlineDiffs.activeEditorWithDiffs"
+  },
+  {
+    "key": "ctrl+tab",
+    "command": "editor.action.acceptCursorTabSuggestion",
+    "when": "cpp.shouldAcceptTab"
+  },
+  {
+    "key": "tab",
+    "command": "-editor.action.acceptCursorTabSuggestion",
+    "when": "cpp.shouldAcceptTab"
+  },
+  {
+    "key": "ctrl+y",
+    "command": "-aichat.newfollowupaction"
+  },
+  {
+    "key": "ctrl+'",
+    "command": "-cursor.openBranchMenu",
+    "when": "composerFocused && cursor.agentIdeUnification.featureGate"
+  },
+  {
+    "key": "ctrl+shift+'",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
+  {
+    "key": "ctrl+pagedown",
+    "command": "-workbench.action.nextEditor"
+  },
+  {
+    "key": "ctrl+shift+c",
+    "command": "-workbench.action.terminal.openNativeConsole",
+    "when": "!terminalFocus"
+  }
+]

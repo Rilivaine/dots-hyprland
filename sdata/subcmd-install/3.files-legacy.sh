@@ -8,7 +8,7 @@
 case "${SKIP_MISCCONF}" in
   true) true;;
   *)
-    for i in $(find dots/.config/ -mindepth 1 -maxdepth 1 ! -name 'quickshell' ! -name 'fish' ! -name 'hypr' ! -name 'fontconfig' -exec basename {} \;); do
+    for i in $(find dots/.config/ -mindepth 1 -maxdepth 1 ! -name 'quickshell' ! -name 'fish' ! -name 'hypr' ! -name 'fontconfig' ! -name 'Cursor' ! -name 'Code' -exec basename {} \;); do
 #      i="dots/.config/$i"
       echo "[$0]: Found target: dots/.config/$i"
       if [ -d "dots/.config/$i" ];then install_dir__sync "dots/.config/$i" "$XDG_CONFIG_HOME/$i"

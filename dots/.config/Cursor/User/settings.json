@@ -1,0 +1,183 @@
+{
+  "workbench.colorTheme": "Aura Soft Dark (Soft Text)",
+  "workbench.colorCustomizations": {
+    "[Aura Soft Dark (Soft Text)]": {
+      "terminal.background": "#1E1E2E",
+      "terminal.foreground": "#CDD6F4",
+      "terminalCursor.foreground": "#F5E0DC",
+      "terminalCursor.background": "#1E1E2E",
+      "terminal.selectionBackground": "#F5E0DC80",
+      "terminal.selectionForeground": "#1E1E2E",
+      "terminal.ansiBlack": "#43465A",
+      "terminal.ansiRed": "#F38BA8",
+      "terminal.ansiGreen": "#A6E3A1",
+      "terminal.ansiYellow": "#F9E2AF",
+      "terminal.ansiBlue": "#87B0F9",
+      "terminal.ansiMagenta": "#F5C2E7",
+      "terminal.ansiCyan": "#94E2D5",
+      "terminal.ansiWhite": "#CDD6F4",
+      "terminal.ansiBrightBlack": "#43465A",
+      "terminal.ansiBrightRed": "#F38BA8",
+      "terminal.ansiBrightGreen": "#A6E3A1",
+      "terminal.ansiBrightYellow": "#F9E2AF",
+      "terminal.ansiBrightBlue": "#87B0F9",
+      "terminal.ansiBrightMagenta": "#F5C2E7",
+      "terminal.ansiBrightCyan": "#94E2D5",
+      "terminal.ansiBrightWhite": "#A1A8C9"
+    }
+  },
+  "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font', monospace",
+  "terminal.integrated.fontSize": 14,
+  "git-autoconfig.configList": [
+  ],
+  "vscode-neovim.ctrlKeysForInsertMode": [
+    "h",
+    "j",
+    "m",
+    "o",
+    "r",
+    "t",
+    "u",
+    "w"
+  ],
+  "vscode-neovim.ctrlKeysForNormalMode": [
+    "b",
+    "e",
+    "f",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "o",
+    "r",
+    "t",
+    "u",
+    "w",
+    "x",
+    "y",
+    "z",
+    "/",
+    "]",
+    "right",
+    "left",
+    "up",
+    "down",
+    "backspace",
+    "delete"
+  ],
+  "editor.fontFamily": "'JetBrainsMono Nerd Font', 'monospace', monospace",
+  "editor.fontLigatures": true,
+  "eslint.format.enable": true,
+  "eslint.useFlatConfig": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "editor.detectIndentation": false,
+  "editor.indentSize": "tabSize",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false,
+  "python.analysis.typeCheckingMode": "strict",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "git.autofetch": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "terminal.external.linuxExec": "kitty",
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "accessibility.verbosity.terminal": false,
+  "workbench.startupEditor": "none",
+  "redhat.telemetry.enabled": false,
+  "rust-analyzer.check.command": "clippy",
+  "editor.minimap.enabled": false,
+  "workbench.activityBar.location": "hidden",
+  "editor.lineNumbers": "relative",
+  "editor.smoothScrolling": true,
+  "window.title": "${dirty}${activeEditorShort}${separator}${rootName}",
+  "window.titleSeparator": " — ",
+  "liveServer.settings.port": 0,
+  "workbench.navigationControl.enabled": false,
+  "window.commandCenter": false,
+  "terminal.sourceControlRepositoriesKind": "external",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "bash",
+      "icon": "terminal-bash"
+    },
+    "zsh": {
+      "path": "zsh",
+      "args": ["-l"]
+    },
+    "tmux": {
+      "path": "tmux",
+      "icon": "terminal-tmux"
+    },
+    "pwsh": {
+      "path": "pwsh",
+      "icon": "terminal-powershell"
+    }
+  },
+  "workbench.editor.highlightModifiedTabs": true,
+  "workbench.editor.pinnedTabsOnSeparateRow": true,
+  "terminal.explorerKind": "external",
+  "chat.commandCenter.enabled": false,
+  "chat.agent.enabled": false,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "rainbow_csv.highlight_rows": true,
+  "python.defaultInterpreterPath": "/bin/python",
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "chat.disableAIFeatures": true,
+  "qt-core.additionalQtPaths": [
+    {
+      "name": "Qt-5.15.18-linux-g++_from_PATH",
+      "path": "/usr/bin/qmake"
+    }
+  ],
+  "qt-qml.qmlls.customExePath": "/usr/bin/qmlls6",
+  "material-code.primaryColor": "#360172",
+  "git.promptToSaveFilesBeforeCommit": "staged",
+  "git.promptToSaveFilesBeforeStash": "staged",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "cursor.cpp.disabledLanguages": [],
+  "workbench.list.smoothScrolling": true,
+  "terminal.integrated.smoothScrolling": true,
+  "workbench.settings.applyToAllProfiles": [
+    "extensions.experimental.affinity"
+  ],
+  "editor.mouseWheelZoom": true,
+  "workbench.editorAssociations": {
+    "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
+    "*.svg": "imagePreview.previewEditor",
+    "*.qrc": "qt-core.qrcEditor"
+  },
+  "cursor.general.disableHttp2": true,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "dart.flutterSdkPath": "/home/deo/Code/flutter/flutter-pkg/flutter",
+  "workbench.layoutControl.enabled": false,
+  "cursor.inlineDiff.enablePerformanceProtection": false,
+  "typescript.experimental.useTsgo": false,
+  "dart.debugExternalPackageLibraries": false,
+  "dart.debugSdkLibraries": false,
+  "window.autoDetectColorScheme": false,
+  "workbench.iconTheme": "icons",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "files.eol": "\n",
+  "workbench.editor.enablePreviewFromCodeNavigation": true,
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+  "diffEditor.hideUnchangedRegions.enabled": true
+}

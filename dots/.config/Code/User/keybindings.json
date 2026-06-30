@@ -1,0 +1,46 @@
+// Place your key bindings in this file to override the defaults
+[
+  {
+    "key": "ctrl+alt+t",
+    "command": "workbench.action.tasks.runTask"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "-workbench.action.files.saveLocalFile",
+    "when": "remoteFileDialogVisible"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "-workbench.action.files.saveAs"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "workbench.action.files.saveFiles"
+  },
+  {
+    "key": "alt+t delete",
+    "command": "workbench.action.terminal.killAll"
+  },
+  {
+    "key": "ctrl+`",
+    "command": "-workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  {
+    "key": "ctrl+`",
+    "command": "workbench.action.terminal.toggleTerminal"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus && terminalHasBeenCreated"
+  },
+  {
+    "key": "alt+space g",
+    "command": "git.openChange"
+  },
+  {
+    "key": "alt+space h",
+    "command": "git.openFile"
+  }
+]
